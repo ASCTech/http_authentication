@@ -36,7 +36,7 @@ p#http-authentication-link {
 	 */
 	function add_login_link() {
 
-		$login_uri = 'http://ruby-test.asc.ohio-state.edu/Shibboleth.sso?target=' . wp_login_url();
+		$login_uri = 'http://ruby-test.asc.ohio-state.edu/Shibboleth.sso/DS?target=' . wp_login_url();
 		$auth_label = 'Shibboleth';
 
 		echo "\t" . '<p id="http-authentication-link"><a class="button-primary" href="' . htmlspecialchars($login_uri) . '">Log In with ' . htmlspecialchars($auth_label) . '</a></p>' . "\n";
