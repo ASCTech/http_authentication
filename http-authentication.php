@@ -36,7 +36,7 @@ p#http-authentication-link {
 	 */
 	function add_login_link() {
 
-		$login_uri = $this->_generate_uri($this->options['login_uri'], wp_login_url());
+		$login_uri = $this->_generate_uri('http://ruby-test.asc.ohio-state.edu/Shibboleth.sso/DS', wp_login_url());
 		$auth_label = 'Shibboleth';
 
 		echo "\t" . '<p id="http-authentication-link"><a class="button-primary" href="' . htmlspecialchars($login_uri) . '">Log In with ' . htmlspecialchars($auth_label) . '</a></p>' . "\n";
@@ -57,7 +57,7 @@ p#http-authentication-link {
 	 * Logout the user by redirecting them to the logout URI.
 	 */
 	function logout() {
-		$logout_uri = $this->_generate_uri($this->options['logout_uri'], home_url());
+		$logout_uri = $this->_generate_uri('http://ruby-test.asc.ohio-state.edu/Shibboleth.sso/Logout', home_url());
 
 		wp_redirect($logout_uri);
 		exit();
