@@ -35,9 +35,8 @@ p#http-authentication-link {
 	 * Add a link to the login form to initiate external authentication.
 	 */
 	function add_login_link() {
-		global $redirect_to;
 
-		$login_uri = sprintf('http://ruby-test.asc.ohio-state.edu/Shibboleth.sso/DS', urlencode($redirect_to));
+		$login_uri = sprintf('http://ruby-test.asc.ohio-state.edu/Shibboleth.sso/DS', urlencode(wp_login_url()));
 		$auth_label = 'Shibboleth';
 
 		echo "\t" . '<p id="http-authentication-link"><a class="button-primary" href="' . htmlspecialchars($login_uri) . '">Log In with ' . htmlspecialchars($auth_label) . '</a></p>' . "\n";
