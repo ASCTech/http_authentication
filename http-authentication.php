@@ -1,11 +1,9 @@
 <?php
 /*
-Plugin Name: HTTP Authentication
-Version: 4.1
-Plugin URI: https://dev.webadmin.ufl.edu/~dwc/2011/07/04/http-authentication-4-0/
-Description: Authenticate users using basic HTTP authentication (<code>REMOTE_USER</code>). This plugin assumes users are externally authenticated, as with <a href="http://www.gatorlink.ufl.edu/">GatorLink</a>.
-Author: Daniel Westermann-Clark
-Author URI: https://dev.webadmin.ufl.edu/~dwc/
+Plugin Name: OSU Wordpress MU Shibboleth
+Version: 0.2
+Description: DO NOT UPDATE THIS PLUGIN THROUGH THE ADMIN INTERFACE. Authenticates users with Shibboleth. Only users that have an existing wordpress account are authenticated. Based on HTTP Authentication by Daniel Westermann-Clark found at https://dev.webadmin.ufl.edu/~dwc/2011/07/04/http-authentication-4-0/
+Author: John Colvin
 */
 
 class HTTPAuthenticationPlugin {
