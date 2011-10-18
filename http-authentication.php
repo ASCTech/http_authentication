@@ -122,43 +122,6 @@ p#http-authentication-link {
 		return $user;
 	}
 
-  /*
-   * Fill the specified URI with the site URI and the specified return location.
-   */
-  function _generate_uri($uri, $redirect_to) {
-    // Support tags for staged deployments
-    $base = $this->_get_base_url();
-
-    $tags = array(
-      'host' => $_SERVER['HTTP_HOST'],
-      'base' => $base,
-      'site' => home_url(),
-      'redirect' => $redirect_to,
-    );
-
-    foreach ($tags as $tag => $value) {
-      $uri = str_replace('%' . $tag . '%', $value, $uri);
-      $uri = str_replace('%' . $tag . '_encoded%', urlencode($value), $uri);
-    }
-
-    // Support previous versions with only the %s tag
-    if (strstr($uri, '%s') !== false) {
-      $uri = sprintf($uri, urlencode($redirect_to));
-    }
-
-    return $uri;
-  }
-
-  /*
-   * Return the base domain URL based on the WordPress home URL.
-   */
-  function _get_base_url() {
-    $home = parse_url(home_url());
-    $base = str_replace(array($home['path'], $home['query'], $home['fragment']), '', home_url());
-
-    return $base;
-  }
-
 }
 
 // Load the plugin hooks, etc.
