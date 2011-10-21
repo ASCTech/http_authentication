@@ -34,7 +34,9 @@ p#http-authentication-link {
 	 */
 	function add_login_link() {
 
-		$login_uri = 'http://ruby-test.asc.ohio-state.edu/Shibboleth.sso/DS?target=' . wp_login_url();
+    $protocol = ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') ? 'http' : 'https';
+
+		$login_uri = $protocol . '://' . $_SERVER['SERVER_NAME'] . '/Shibboleth.sso/DS?target=' . wp_login_url();
 		$auth_label = 'Shibboleth';
 
 		echo "\t" . '<p id="http-authentication-link"><a class="button-primary" href="' . htmlspecialchars($login_uri) . '">Log In with ' . htmlspecialchars($auth_label) . '</a></p>' . "\n";
@@ -55,7 +57,8 @@ p#http-authentication-link {
 	 * Logout the user by redirecting them to the logout URI.
 	 */
 	function logout() {
-		$logout_uri = 'http://ruby-test.asc.ohio-state.edu/Shibboleth.sso/Logout?target=' . home_url();
+	  $protocol = ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') ? 'http' : 'https';
+		$logout_uri = $protocol . '://' . $_SERVER['SERVER_NAME'] . 'Shibboleth.sso/Logout?target=' . home_url();
 
 		wp_redirect($logout_uri);
 		exit();
