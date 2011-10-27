@@ -33,13 +33,19 @@ p#http-authentication-link {
    * Add a link to the login form to initiate external authentication.
    */
   function add_login_link() {
+    $login_uri = $this->get_login_uri(wp_login_url());
+    echo "\t" . '<p id="http-authentication-link"><a class="button-primary" href="' . htmlspecialchars($login_uri) . '">Log In with Shibboleth</a></p>' . "\n";
+  }
 
+  function get_login_uri($target='') {
     $protocol = ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') ? 'http' : 'https';
+    $login_uri = $protocol . '://' . $_SERVER['SERVER_NAME'] . '/Shibboleth.sso/DS';
 
-    $login_uri = $protocol . '://' . $_SERVER['SERVER_NAME'] . '/Shibboleth.sso/DS?target=' . wp_login_url();
-    $auth_label = 'Shibboleth';
+    if (!empty($target)) {
+      $login_uri .= '?target=' . urlencode($target);
+    }
 
-    echo "\t" . '<p id="http-authentication-link"><a class="button-primary" href="' . htmlspecialchars($login_uri) . '">Log In with ' . htmlspecialchars($auth_label) . '</a></p>' . "\n";
+    return $login_uri;
   }
 
   /*
