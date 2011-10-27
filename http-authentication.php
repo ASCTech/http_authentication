@@ -38,7 +38,7 @@ p#http-authentication-link {
   }
 
   function get_login_uri($target='') {
-    $protocol = '://' . ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') ? 'http' : 'https';
+    $protocol =  (($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') ? 'http' : 'https') . '://';
     $login_uri = $protocol . $_SERVER['SERVER_NAME'] . '/Shibboleth.sso/DS';
 
     if (!empty($target)) {
