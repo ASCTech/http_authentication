@@ -38,11 +38,10 @@ p#http-authentication-link {
   }
 
   function get_login_uri($target='') {
-    $protocol =  (($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') ? 'http' : 'https') . '://';
-    $login_uri = $protocol . $_SERVER['SERVER_NAME'] . '/Shibboleth.sso/DS';
+    $login_uri = '/Shibboleth.sso/DS';
 
     if (!empty($target)) {
-      $login_uri .= '?target=' . urlencode($protocol . $target);
+      $login_uri .= '?target=' . urlencode($target);
     }
 
     return $login_uri;
@@ -61,8 +60,7 @@ p#http-authentication-link {
    * Logout the user by redirecting them to the logout URI.
    */
   function logout() {
-    $protocol = ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') ? 'http' : 'https';
-    $logout_uri = $protocol . '://' . $_SERVER['SERVER_NAME'] . 'Shibboleth.sso/Logout?target=' . home_url();
+    $logout_uri = '/Shibboleth.sso/Logout?target=' . home_url();
 
     wp_redirect($logout_uri);
     exit();
