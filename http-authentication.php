@@ -88,18 +88,22 @@ p#http-authentication-link {
     return $user;
   }
 
-  /*
-   * If the REMOTE_USER or REDIRECT_REMOTE_USER evironment variable is set, use it
-   * as the username. This assumes that you have externally authenticated the user.
-   */
-  function check_remote_user() {
+  function get_shib_username() {
     $username = '';
-
     foreach (array('REMOTE_USER', 'REDIRECT_REMOTE_USER') as $key) {
       if (isset($_SERVER[$key])) {
         $username = str_replace('@osu.edu', '', $_SERVER[$key]);
       }
     }
+    return $username;
+  }
+
+  /*
+   * If the REMOTE_USER or REDIRECT_REMOTE_USER evironment variable is set, use it
+   * as the username. This assumes that you have externally authenticated the user.
+   */
+  function check_remote_user() {
+    $username = $this->get_shib_username();
 
     if (! $username) {
       return new WP_Error('empty_username', '<strong>ERROR</strong>: No REMOTE_USER or REDIRECT_REMOTE_USER found.');
