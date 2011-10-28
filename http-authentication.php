@@ -5,10 +5,16 @@ Version: 0.2
 Description: DO NOT UPDATE THIS PLUGIN THROUGH THE ADMIN INTERFACE. Authenticates users with Shibboleth. Only users that have an existing wordpress account are authenticated. Based on HTTP Authentication by Daniel Westermann-Clark found at https://dev.webadmin.ufl.edu/~dwc/2011/07/04/http-authentication-4-0/
 Author: John Colvin
 */
+require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'options-page.php');
 
 class HTTPAuthenticationPlugin {
 
+  private $permitted_orgs_option_name;
+  public $flash;
+
   function HTTPAuthenticationPlugin() {
+    $this->permitted_orgs_option_name = 'site_creation_permitted_orgs';
+    $this->flash = '';
     add_action('login_head', array(&$this, 'add_login_css'));
     add_action('login_footer', array(&$this, 'add_login_link'));
     add_action('wp_logout', array(&$this, 'logout'));
@@ -122,8 +128,77 @@ p#http-authentication-link {
     return $user;
   }
 
+  function addOrg($org_number) {
+    $current_orgs = $this->get_permitted_orgs();
+
+    $orgs = $current_orgs ?: array();
+    if (in_array($org_number, $orgs)) {
+      $this->flash = "This org is already permitted";
+      return true;
+    }
+
+    $orgs[] = $org_number;
+
+    if ($current_orgs === false) {
+      $result = add_option($this->permitted_orgs_option_name, $orgs);
+    }
+    else {
+      $result = update_option($this->permitted_orgs_option_name, $orgs);
+    }
+    
+    $this->flash = ($result === true) ? 'Org successfully added' : 'Could not add this org';
+    return $result;
+  }
+
+  function deleteOrg($org_number) {
+    $orgs = $this->get_permitted_orgs();
+    $key = array_search($org_number, $orgs);
+    if ($key !== false) {
+      unset($orgs[$key]);
+      $result = update_option($this->permitted_orgs_option_name, $orgs);
+      $this->flash = ($result === true) ? 'Successfully removed' : 'Could not remove this org';
+      return $result;
+    }
+
+    return true;
+  }
+
+  function get_permitted_orgs() {
+    return get_option($this->permitted_orgs_option_name);
+  }
+
+  private function is_in_permitted_org() {
+    if (isset($_SERVER['HTTP_DEPARTMENTNUMBER'])) {
+      $permitted_orgs = $this->get_permitted_orgs();
+      $orgs = explode(';', $_SERVER['HTTP_DEPARTMENTNUMBER']);
+      foreach ($orgs as $org) {
+        if (in_array($org, $permitted_orgs)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  private function has_permitted_affiliation() {
+    if (isset($_SERVER['HTTP_AFFILIATION'])) {
+      $affiliations = explode(';', $_SERVER['HTTP_AFFILIATION']);
+      foreach ($affiliations as $affiliation) {
+        if ($affiliation == 'staff@osu.edu' || $affiliation == 'faculty@osu.edu') {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  function can_create_site() {
+    return $this->has_permitted_affiliation() && $this->is_in_permitted_org();
+  }
+
 }
 
 // Load the plugin hooks, etc.
 $http_authentication_plugin = new HTTPAuthenticationPlugin();
+$options_page = new HTTPAuthenticationOptionsPage($http_authentication_plugin);
 ?>
