@@ -168,47 +168,43 @@ p#http-authentication-link {
   }
 
   private function is_in_permitted_org() {
-    if (isset($_SERVER['HTTP_DEPARTMENTNUMBER'])) {
-      $permitted_orgs = $this->get_permitted_orgs();
-      $org_keys = array('departmentNumber', 'HTTP_DEPARTMENTNUMBER');
-      foreach ($org_keys as $org_key) {
-        if (isset($_SERVER[$org_key])) {
-          $orgs = explode(';', $_SERVER[$org_key]);
-        }
-      }
-
-      if (!isset($orgs)) {
-        return false;
-      }
-
-      foreach ($orgs as $org) {
-        if (in_array($org, $permitted_orgs)) {
-          return true;
-        }
+    $permitted_orgs = $this->get_permitted_orgs();
+    $org_keys = array('departmentNumber', 'HTTP_DEPARTMENTNUMBER');
+    foreach ($org_keys as $org_key) {
+      if (isset($_SERVER[$org_key])) {
+        $orgs = explode(';', $_SERVER[$org_key]);
       }
     }
-    return false;
+
+    if (!isset($orgs)) {
+      return false;
+    }
+
+    foreach ($orgs as $org) {
+      if (in_array($org, $permitted_orgs)) {
+        return true;
+      }
+    }
   }
 
   private function has_permitted_affiliation() {
-    if (isset($_SERVER['HTTP_AFFILIATION'])) {
-      $affiliation_keys = array('affiliation', 'HTTP_AFFILIATION');
-      foreach ($affiliation_keys as $affiliation_key) {
-        if (isset($affiliation_key)) {
-          $affiliations = explode(';', $_SERVER[$affiliation_key]);
-        }
-      }
-
-      if (!isset($affiliations)) {
-        return false;
-      }
-
-      foreach ($affiliations as $affiliation) {
-        if ($affiliation == 'staff@osu.edu' || $affiliation == 'faculty@osu.edu') {
-          return true;
-        }
+    $affiliation_keys = array('affiliation', 'HTTP_AFFILIATION');
+    foreach ($affiliation_keys as $affiliation_key) {
+      if (isset($affiliation_key)) {
+        $affiliations = explode(';', $_SERVER[$affiliation_key]);
       }
     }
+
+    if (!isset($affiliations)) {
+      return false;
+    }
+
+    foreach ($affiliations as $affiliation) {
+      if ($affiliation == 'staff@osu.edu' || $affiliation == 'faculty@osu.edu') {
+        return true;
+      }
+    }
+    
     return false;
   }
 
