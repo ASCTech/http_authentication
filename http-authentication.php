@@ -190,7 +190,7 @@ p#http-authentication-link {
   private function has_permitted_affiliation() {
     $affiliation_keys = array('affiliation', 'HTTP_AFFILIATION');
     foreach ($affiliation_keys as $affiliation_key) {
-      if (isset($SERVER[$affiliation_key])) {
+      if (isset($_SERVER[$affiliation_key])) {
         $affiliations = explode(';', $_SERVER[$affiliation_key]);
       }
     }
